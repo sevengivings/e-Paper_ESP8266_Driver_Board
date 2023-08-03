@@ -5,7 +5,7 @@ To monitor indoor and outdoor ultra fine dust status and indoor CO2 level, I uti
 
 Waveshare e-Paper ESP8266 Driver Board is useful of various usages, due to ESP8266 it can be anything especially in the field of IoT(https://www.waveshare.com/wiki/E-Paper_ESP8266_Driver_Board).  
 
-Home Assistant gets external ultra-fine dust from Naver weather information installed through HACS, and DIY board contains the fine dust sensor (SDS021) and carbon dioxide sensor (MH-Z19B) is connected to Home Assistant through ESPHome. 
+Home Assistant gets external ultra-fine dust value from Naver weather information installed through HACS, and DIY board which has the fine dust sensor (SDS021) and carbon dioxide sensor (MH-Z19B) is connected to Home Assistant through ESPHome. 
 
 ![110357](https://github.com/sevengivings/e-Paper_ESP8266_Driver_Board/assets/2328500/f76a3f0a-ffae-47dd-8e88-1f7f148db241)
 
