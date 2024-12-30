@@ -9,5 +9,11 @@ Home Assistant gets external ultra-fine dust value from Naver weather informatio
 
 ![110357](https://github.com/sevengivings/e-Paper_ESP8266_Driver_Board/assets/2328500/f76a3f0a-ffae-47dd-8e88-1f7f148db241)
 
-If you have plan to use 7.5inch e-Paper, you should know that ESP8266 version of e-Paper driver board doesn't have enough memory. So, please buy e-Paper ESP32 driver board instead.  
+If you have plan to use 7.5inch e-Paper, you should know that ESP8266 version of e-Paper driver board doesn't have enough memory. So, please buy e-Paper ESP32 driver board instead. 
+
+Waveshare e-Paper ESP32 Driver board: https://www.waveshare.com/wiki/E-Paper_ESP32_Driver_Board 
+
+I attached esp32-eink75.yaml for 7.5inch E-Paper (B) E-Ink Raw Display, 800x480, Red/Black/White SPI without PCB. 
+
+
 
