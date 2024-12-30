@@ -1,0 +1,92 @@
+esphome:
+  name: esp32-eink75
+
+esp32:
+  board: esp32dev
+  framework:
+    type: arduino
+
+# Enable logging
+logger:
+
+# Enable Home Assistant API
+api:
+  password: ""
+
+ota:
+  platform: esphome
+  password: ""
+
+wifi:
+  ssid: !secret ssid 
+  password: !secret password 
+#  domain: !secret domain 
+  
+#  manual_ip:
+#    # Set this to the IP of the ESP
+#    static_ip: 192.168.1.177
+#    # Set this to the IP address of the router. Often ends with .1
+#    gateway: 192.168.1.1
+#    # The subnet of the network. 255.255.255.0 works for most home networks.
+#    subnet: 255.255.255.0
+
+  ap:
+    ssid: "Esp32-Eink75 Fallback Hotspot"
+    password: "vzdz2ed5KqFN"
+
+captive_portal:
+
+time:
+  - platform: homeassistant
+    id: ntp
+
+# fonts directory and ttf file are required 
+font:
+  - file: "fonts/verdana.ttf"
+    id: font1
+    size: 36
+    glyphs: |-
+      !"%()+=,-_./:°0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ abcdefghijklmnopqrstuvwxyz
+
+# Your sensor values of target Home Assistant 
+sensor: 
+  - platform: homeassistant 
+    entity_id: sensor.2_5um
+    id: indoor_pm25
+    internal: true 
+  - platform: homeassistant 
+    entity_id: sensor.naver_weather_ultrafinedust_1
+    id: outdoor_pm25
+    internal: true 
+  - platform: homeassistant 
+    entity_id: sensor.mh_z19_co2_value
+    id: co2
+    internal: true 
+
+    
+spi:
+  clk_pin: GPIO13  
+  mosi_pin: GPIO14 
+
+display:
+  - platform: waveshare_epaper
+    cs_pin: GPIO15  
+    dc_pin: GPIO27  
+    busy_pin: GPIO25    
+    reset_pin: GPIO26   
+    model: 7.50in-bv3
+    rotation: 270
+    update_interval: 60s 
+    lambda: |-
+      // position 
+      #define xRes 264
+      #define yRes 176 
+      #define pad 10
+      
+      it.strftime(0 + pad, 0 + pad, id(font1), "%m-%d %H:%M", id(ntp).now());
+      it.printf(0 + pad, 0 + pad + 36, id(font1), TextAlign::TOP_LEFT, "0PM25: %.0f", id(outdoor_pm25).state);
+      it.printf(0 + pad, 0 + pad + 36 * 2, id(font1), TextAlign::TOP_LEFT, "IPM25: %.0f", id(indoor_pm25).state);
+      it.printf(0 + pad, 0 + pad + 36 * 3, id(font1), TextAlign::TOP_LEFT, "CO2: %.0f", id(co2).state);
+      
+
+ 
