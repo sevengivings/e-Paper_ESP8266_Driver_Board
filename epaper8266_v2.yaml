@@ -1,0 +1,93 @@
+esphome:
+  name: epaper8266
+
+esp8266:
+  board: nodemcu
+
+# Enable logging
+logger:
+
+# Enable Home Assistant API
+api:
+  password: ""
+
+ota:
+  - platform: esphome
+    password: ""
+
+wifi:
+  ssid: !secret ssid 
+  password: !secret password 
+#  domain: !secret domain 
+  
+  manual_ip:
+    # Set this to the IP of the ESP
+    static_ip: 192.168.1.177
+    # Set this to the IP address of the router. Often ends with .1
+    gateway: 192.168.1.1
+    # The subnet of the network. 255.255.255.0 works for most home networks.
+    subnet: 255.255.255.0
+
+captive_portal:
+
+time:
+  - platform: homeassistant
+    id: ntp
+
+# fonts directory and ttf file are required 
+font:
+  - file: "NanumBarunGothic-YetHangul.ttf"
+    id: font1
+    size: 24
+    glyphs: |-
+      !"%()+=,-_./:°℃℉✽㎍[]0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ abcdefghijklmnopqrstuvwxyz초미세먼지외부내이산화탄소
+      현재날씨정보온도오늘일최고저풍속강수확률습구름많음비안옴흐림눈나기시월분작후맑전잠만다리요실공질예가끔황
+
+spi:
+  clk_pin: D5
+  mosi_pin: D7
+
+# Your sensor values of target Home Assistant 
+sensor: 
+  - platform: homeassistant 
+    entity_id: sensor.2_5um
+    id: indoor_pm25
+    internal: true 
+  - platform: homeassistant 
+    entity_id: sensor.naver_weather_ultrafinedust_1
+    id: outdoor_pm25
+    internal: true 
+  - platform: homeassistant 
+    entity_id: sensor.mh_z19_co2_value
+    id: co2
+    internal: true 
+  - platform: homeassistant 
+    entity_id: sensor.mi_air_purifier_2s_humidity
+    id: indoor_humidity
+    internal: true 
+  - platform: homeassistant 
+    entity_id: sensor.naver_weather_nowtemp_1             # 현재 온도
+    id: nowtemp
+    
+display:
+  - platform: waveshare_epaper
+    cs_pin: D8
+    dc_pin: D2
+    busy_pin: D1
+    reset_pin: D4
+    model: 2.70in
+    rotation: 270
+    update_interval: 60s 
+    lambda: |-
+      // position 
+      #define xRes 264
+      #define yRes 176 
+      #define pad 10
+      
+      it.strftime(0 + pad, 0 + pad, id(font1),  "%m월%d일(%a) %H:%M", id(ntp).now());
+      it.printf(0 + pad, 10 + pad + 24, id(font1), TextAlign::TOP_LEFT, "✽ 외부 PM2.5: %.0f㎍", id(outdoor_pm25).state);
+      it.printf(0 + pad, 10 + pad + 24 * 2, id(font1), TextAlign::TOP_LEFT, "✽ 실내 PM2.5: %.0f㎍", id(indoor_pm25).state);
+      it.printf(0 + pad, 10 + pad + 24 * 3, id(font1), TextAlign::TOP_LEFT, "✽ 이산화탄소: %.0fppm", id(co2).state);
+      it.printf(0 + pad, 10 + pad + 24 * 4, id(font1), TextAlign::TOP_LEFT, "✽ 실내 습도: %.0f%%", id(indoor_humidity).state);
+      it.printf(0 + pad, 10 + pad + 24 * 5, id(font1), TextAlign::TOP_LEFT, "✽ 현재 온도: %.0f℃", id(nowtemp).state);
+ 
